@@ -7,12 +7,13 @@
 \method{print}{classify}(x, ...)
 }
 \arguments{
-\item{x}{an object of class 'classify' with the allometric variables ("X", "Y") and classification of maturity (juvelines = 0, adults = 1).}
+\item{x}{an object of class 'classify' with the allometric variables ("X", "Y") and classification of maturity (juveniles = 0, adults = 1).}
 
 \item{\dots}{Additional arguments to the print method.}
 }
 \value{
-The number of juveniles and adults. Also shows the regression analysis for juveniles and adults.
+The number of juveniles and adults. Also shows the regression analysis for juveniles and adults 
+and an ANCOVA analisys to compare slopes.
 }
 \description{
 Print method for classify class

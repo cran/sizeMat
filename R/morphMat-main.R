@@ -5,21 +5,20 @@
 #' @importFrom MASS lda qda
 #' @importFrom grDevices colors
 #' @importFrom graphics axis box legend lines plot points hist par abline
-#' @importFrom stats binomial quantile coef complete.cases cutree dist glm hclust prcomp predict cov pchisq
 #' @importFrom utils data read.csv installed.packages
+#' @import stats 
 #'
 #' @title Size at Sexual Maturity.
 #'
-#' @description Contains functions to estimate morphometric and gonadal size at sexual maturity for organisms, usually fish and invertebrates. It includes methods for classification based on relative growth (principal components analysis, hierarchical clustering, discriminant analysis), logistic regression (frequentist or Bayes), parameters estimation and some basic plots. The size at sexual maturity is defined as the length at which a randomly chosen specimen has a 50% chance of being mature
+#' @description Contains functions to estimate size at morphometric and gonad maturity for organisms, usually fish and invertebrates. It includes methods for classification based on relative growth (principal components analysis, hierarchical clustering, discriminant analysis), logistic regression (frequentist or Bayes), parameters estimation and some basic plots. The size at sexual maturity is defined as the length at which a randomly chosen specimen has a 50% chance of being mature
 #' @name sizeMat-package
 #' @aliases sizeMat-package sizeMat
 #' @docType package
 #' @author Josymar Torrejon-Magallanes <ejosymart@@gmail.com>
 #' @details Package: sizeMat
 #' @details Type: Package
-#' @details The Morphometric and Gonadal size at sexual maturity are estimating using differents functions (process).
-#' 
-#' 1) The estimation of the Morphometric Size at Sexual Maturity involves two processes:
+#' @details The Size at Morphometric and Gonad maturity are estimating using differents functions (process).
+#' 1) The estimation of the Size at Morphometric Maturity involves two processes:
 #' 
 #' 1.1) A Principal Components Analisys is conducted with two allometric variables (x: independent variable, y: dependent variable) in log base, allowing to distinguish 
 #' two groups that would represent juveniles and adult. The individuals are assigned to each group using a hierarchical classification procedure (hierarchical cluster). 
@@ -28,39 +27,39 @@
 #' is carried out to obtain a discriminating function that permitted any individuals to be classified as a juvenile or an adult on the basis of the X and Y 
 #' allometric variables.
 #' 
-#' 1.2) After classification, the logistic approach is used. The morphometric size at 50\% maturity (\eqn{L_50}) is estimated as the length at
+#' 1.2) After classification, the logistic approach is used. The size at 50\% maturity (\eqn{L_50}) is estimated as the length at
 #' which a randomly chosen specimen has a 50\% chance of being mature (Somerton  1980, Roa  et al. 1999, Corgos & Freire 2006). 
 #' In the regression analysis, \eqn{X} (e.g: carapace width) is considered the explanatory variable and the classification \eqn{CS} 
-#' (juvelines: 0, adults: 1) is considered the response variable (binomial). 
+#' (juveniles: 0, adults: 1) is considered the response variable (binomial). 
 #' 
 #' The variables are fitted to a logistic function with the form: 
 #' 
-#' \deqn{P_CS = 1 / [1+e^-(beta_0 + beta_1*X)]}
+#' \deqn{P_{CS} = 1 / [1+e^{-(beta_0 + beta_1*X)}]}
 #' 
 #' where:
 #' 
-#' \eqn{P_CL} is the probability of an individual of being mature at a determinate \eqn{X} length.
+#' \eqn{P_{CL}} is the probability of an individual of being mature at a determinate \eqn{X} length.
 #'  
 #' \eqn{beta_0} (intercept) and \eqn{beta_1} (slope) are parameters estimated. 
 #' 
-#' The (\eqn{L_50}) is calculated as: 
+#' The (\eqn{L_{50}}) is calculated as: 
 #' 
-#' \deqn{L_50 = -beta_0 / beta_1}
+#' \deqn{L_{50} = -beta_0 / beta_1}
 #' 
-#' Some basic plotting (classification, \eqn{beta_0}, \eqn{beta_1} and \eqn{L_50} histogram, and maturity ogive) 
+#' Some basic plotting (classification, \eqn{beta_0}, \eqn{beta_1} and \eqn{L_{50}} histogram, and maturity ogive) 
 #' are also provided.
 #' 
 #' 
-#' 2) The estimation of Gonadal Size at Sexual Maturity use the logistic approach only. 
+#' 2) The estimation of Size at Gonad Maturity use the logistic approach only. 
 #' 
-#' To estimate gonadal size at sexual maturity, the database must contains the stage of sexual 
+#' To estimate size at gonadal maturity, the database must contains the stage of sexual 
 #' maturity and at least one allometric variable (e.g: total length, fork length, carapace width).
 #' The stage of sexual maturity is refered to the gonadal maturarion stages (e.g: I, II, III, IV or 0, 1, etc).
 #' 
 #' So, in the regression analysis, the allometric variable (e.g: total length) is considered the
 #' explanatory variable and the stage of sexual maturity (inmature: 0, mature: 1) 
 #' is considered the response variable (binomial). The regression  analysis is performed 
-#' in the same way as the morphometric size at sexual maturity.
+#' in the same way as the size at morphometric maturity.
 #' 
 #' @references Agostinho, C. S. (2000). Use of otoliths to estimate size at sexual maturity in fish. Brazilian Archives of Biology and Technology, 43(4).
 #' @references Corgos, A. & Freire, J. (2006). Morphometric and gonad maturity in the spider crab Maja brachydactyla: a comparison of methods for estimating size at maturity in species with determinate growth. ICES Journal of Marine Science: Journal du Conseil, 63(5), 851-859.
@@ -73,7 +72,7 @@
 NULL
 #' Classify mature
 #' 
-#' Classify te individuals in two groups (0: juvelines, 1: adults) based on relative growth.
+#' Classify te individuals in two groups (0: juveniles, 1: adults) based on relative growth.
 #' @param data data.frame with allometric variables and sex category (male, female). 
 #' If sex category contains NA's, that row will be filtered.
 #' @param varNames the name of two allometric variables to be used for analysis.
@@ -84,7 +83,7 @@ NULL
 #' We suggest begin the analysis using the \code{method = "ld"}.
 #' @return A data.frame of class 'classify', with x (independent), y (dependent) and classification of maturity
 #' (juveniles = 0, adult = 1) variables.
-#' @details Classify the individuals in two groups (juvelines = 0 and adult = 1).
+#' @details Classify the individuals in two groups (juveniles = 0 and adult = 1).
 #' 
 #' A Principal Components Analisys was conducted with two allometric variables (x: independent variable, y: dependent variable) 
 #' in log base, allowing to distinguish two groups that would represent juveniles and adult.
@@ -150,9 +149,10 @@ classify_mature <- function(data, varNames = c("x", "y"), varSex = "sex",
 
 #' Print method for classify class
 #'
-#' @param x an object of class 'classify' with the allometric variables ("X", "Y") and classification of maturity (juvelines = 0, adults = 1).
+#' @param x an object of class 'classify' with the allometric variables ("X", "Y") and classification of maturity (juveniles = 0, adults = 1).
 #' @param \dots Additional arguments to the print method.
-#' @return The number of juveniles and adults. Also shows the regression analysis for juveniles and adults.
+#' @return The number of juveniles and adults. Also shows the regression analysis for juveniles and adults 
+#' and an ANCOVA analisys to compare slopes.
 #' @examples
 #' data(crabdata)
 #' 
@@ -174,20 +174,24 @@ print.classify <- function(x, ...){
   
   fit_juv <- glm(y ~ x, data = juv)
   fit_adt <- glm(y ~ x, data = adt)
+  slope   <- summary(glm(y ~ x + mature + x:mature, data = data)) 
   cat("--------------------------------------------------------", "\n")
   cat("1) Linear regression for juveniles", "\n")
   print(summary(fit_juv))
   cat("--------------------------------------------------------", "\n")
   cat("2) Linear regression for adults", "\n")
   print(summary(fit_adt))
-  
+  cat("--------------------------------------------------------", "\n")
+  cat("3) Difference between slopes (ANCOVA)", "\n")
+  print(slope$coefficients)
+  print(ifelse(rev(slope$coefficients)[1]<0.05, "slopes are different", "slopes are the same"))
   return(invisible())
 }
 
 
 #' Plot method for classify class
 #'
-#' @param x an object of class 'classify' with the allometric variables ("X", "Y") and classification of maturity (juvelines = 0, adults = 1).
+#' @param x an object of class 'classify' with the allometric variables ("X", "Y") and classification of maturity (juveniles = 0, adults = 1).
 #' @param xlab a title for the x axis.
 #' @param ylab a title for the y axis.
 #' @param col the colors for juveniles and adults group.
@@ -250,16 +254,16 @@ plot.classify <- function(x, xlab = "X", ylab = "Y", col = c(1, 2), pch = c(4, 5
   eq_juv <- paste0("Y = ", round(as.numeric(coef(fit_juv)[1]), 2), " + ", round(as.numeric(coef(fit_juv)[2]),2), " *X", sep = "")
   eq_adt <- paste0("Y = ", round(as.numeric(coef(fit_adt)[1]), 2), " + ", round(as.numeric(coef(fit_adt)[2]),2), " *X", sep = "")
   legend("topleft", c(paste("Juveniles: ", eq_juv), paste("Adults: ", eq_adt)), 
-         bty = "n", pch = PCH, col = COL, cex = 0.8)
+         bty = "n", pch = unique(PCH), col = unique(COL), cex = 0.8)
   return(invisible(NULL))
 }
 
 
 #' Estimate morphometric mature
 #' 
-#' Estimate the morphometric size at sexual maturity (\eqn{L50}).
+#' Estimate size at morphometric maturity (\eqn{L50}).
 #'
-#' @param data an object of class 'classify' with the allometric variables (X", "Y") and classification of maturity (juvelines = 0, adults = 1).
+#' @param data an object of class 'classify' with the allometric variables (X", "Y") and classification of maturity (juveniles = 0, adults = 1).
 #' @param method a character string indicating the method to be applied, \code{"fq"} frecuentist GLM, or \code{"bayes"} Bayes GLM (MCMClogit function).
 #' @param niter number of iterations (bootstrap resampling).
 #' @param seed a single value, interpreted as an integer.
@@ -271,14 +275,14 @@ plot.classify <- function(x, xlab = "X", ylab = "Y", col = c(1, 2), pch = c(4, 5
 #' 
 #' \code{B_boot} the 'n iter' values of parameter B.
 #' 
-#' \code{L50} the 'n iter' values of parameter L50 (morphometric size at sexual maturity).
+#' \code{L50} the 'n iter' values of parameter L50 (size at morphometric maturity).
 #' 
 #' \code{out} a dataframe with the allometric variables "X" and "Y", classification of maturity, the fitted values for  
 #' logistic regression and confidence intervals (95\%). Also the summary statistics of the model is provided.
-#' @details Estimate the morphometric size at sexual maturity using a logistic regression with X variable 
+#' @details Estimate the size at morphometric maturity using a logistic regression with X variable 
 #' and maturity classification (two categories: juveniles and adults). 
 #' 
-#' The function requires an object of class "classify" with the X, Y (allometric variables) and classification of maturity (juvelines = 0, adults = 1).
+#' The function requires an object of class "classify" with the X, Y (allometric variables) and classification of maturity (juveniles = 0, adults = 1).
 #' 
 #' The argument \code{method} requires a character string indicanting which regression will be used for the test.
 #' If \code{method = "fq"} the logistic regression is based on GLM (frequentist) and if \code{method = "bayes"} a sample from the posterior distribution 
@@ -297,13 +301,13 @@ plot.classify <- function(x, xlab = "X", ylab = "Y", col = c(1, 2), pch = c(4, 5
 #' 
 #' my_mature = morph_mature(classify_data, method = "fq", niter = 50)
 #' 
-#' ## \eqn{niter} parameters:
+#' # 'niter' parameters:
 #' my_mature$A_boot
 #' my_mature$B_boot
 #' my_mature$L50_boot
 #' my_mature$out
 #' @export
-morph_mature <- function(data, method = "fq", niter = 999, seed = 70387){
+morph_mature <- function(data, method = "fq", niter = 999, seed = 070388){
   
   if (!inherits(data, "classify"))
     stop("Use only with 'classify' objects")
@@ -326,12 +330,12 @@ morph_mature <- function(data, method = "fq", niter = 999, seed = 70387){
 }
 
 
-#' Print method for morphMat class (morphometric size at sexual maturity)
+#' Print method for morphMat class (size at morphometric maturity)
 #'
 #' @param x object of class 'morphMat' with the parameters of the logistic regression and a data.frame with the allometric variables ("X", "Y") 
 #' and classification of maturity. Also the fitted values for the logistic regression and confidence intervals (95\%).
 #' @param \dots Additional arguments to the print method.
-#' @return The median of the morphometric size at sexual maturity estimation and parameters.
+#' @return The median of the size at morphometric maturity estimation, parameters and the Nagelkerke's R square.
 #' @examples
 #' data(crabdata)
 #' 
@@ -345,28 +349,35 @@ morph_mature <- function(data, method = "fq", niter = 999, seed = 70387){
 #' @method print morphMat
 print.morphMat <- function(x, ...){
   if (!inherits(x, "morphMat"))
-    stop("Use only with 'morphMat' objects")
+    stop("Use with 'morphMat' objects only")
   cat("formula: Y = 1/1+exp-(A + B*X)", "\n\n")
   
   A_b   <- quantile(x$A_boot, probs = 0.5, na.rm = TRUE)
   B_b   <- quantile(x$B_boot, probs = 0.5, na.rm = TRUE)
   L50_b <- quantile(x$L50_boot, probs = 0.5, na.rm = TRUE)
   
+  fit     <- x$out
+  x_input <- fit$x
+  y_input <- fit$mature
+  
+  model1 <- glm(y_input ~ x_input, family = binomial(link = "logit"))
+  R2     <- nagelkerkeR2(model1)
+  
   if(is.null(coef(x$model))){
-    tab <- matrix(as.numeric(c(A_b, B_b, L50_b)), 
-                  nrow = 3, ncol = 1, byrow = TRUE)
+    tab <- matrix(c(round(as.numeric(c(A_b, B_b, L50_b)), 4), round(R2, 4)), 
+                  nrow = 4, ncol = 1, byrow = TRUE)
     colnames(tab) <- c("Bootstrap (Median)")
-    rownames(tab) <- c("A", "B", "L50")
+    rownames(tab) <- c("A", "B", "L50", "R2")
     tab <- as.table(tab)
     return(tab)
   }else{
     A_or   <- coef(x$model)[1]
     B_or   <- coef(x$model)[2]
     L50_or <- -A_or/B_or
-    tab <- matrix(as.numeric(c(A_or, A_b, B_or, B_b, L50_or, L50_b)), 
-                  nrow = 3, ncol = 2, byrow = TRUE)
+    tab <- matrix(c(round(as.numeric(c(A_or, A_b, B_or, B_b, L50_or, L50_b)), 4), "-", round(R2, 4)), 
+                  nrow = 4, ncol = 2, byrow = TRUE)
     colnames(tab) <- c("Original", "Bootstrap (Median)")
-    rownames(tab) <- c("A", "B", "L50")
+    rownames(tab) <- c("A", "B", "L50", "R2")
     tab <- as.table(tab)
     return(tab)
   }
@@ -375,13 +386,13 @@ print.morphMat <- function(x, ...){
 }
 
 
-#' Plot method for morphMat class (morphometric size at sexual maturity)
+#' Plot method for morphMat class (size at morphometric maturity)
 #'
 #' @param x object of class 'morphMat' with the mature parameters and a data.frame with the allometric variables ("X", "Y") 
 #' and classification of maturity. Also the fitted values for the logistic regression and confidence intervals (95\%).
 #' @param xlab a title for the x axis.
 #' @param ylab a title for the y axis.
-#' @param col color for the logistic curve and for the L50\% morphometric size at sexual maturity.
+#' @param col color for the logistic curve and for the L50\% size at morphometric maturity.
 #' @param lwd line with for drawing fitted values and confidence intervals.
 #' @param lty line type line type for drawing fitted values and confidence intervals
 #' @param vline_hist color of the vertival lines in the histogram. The lines represent the 
@@ -404,13 +415,17 @@ plot.morphMat <- function(x, xlab = "X", ylab = "Proportion mature", col = c("bl
                           lwd = 2, lty = 2, vline_hist = "black", lwd_hist = 2, lty_hist = 2, ...){
   
   if (!inherits(x, "morphMat"))
-    stop("Use only with 'morphMat' objects")
+    stop("Use with 'morphMat' objects only")
   
   fit     <- x$out
   x_input <- fit$x
   y_input <- fit$mature
   m_p     <- tapply(y_input, x_input, mean)
   wide    <- quantile(x$L50_boot, probs = c(0.025, 0.5, 0.975), na.rm = TRUE)
+  
+  # R-square Nagelkerke method
+  model1 <- glm(y_input ~ x_input, family = binomial(link = "logit"))
+  R2     <- nagelkerkeR2(model1)
   
   # figure 1
   hist(x$A_boot, main = "", xlab = "A", col = "grey90")
@@ -446,8 +461,10 @@ plot.morphMat <- function(x, xlab = "X", ylab = "Proportion mature", col = c("bl
   lines(c(wide[2], wide[2]), c(-1, 0.5), col = col[2], lwd = lwd, lty = lty)
   lines(c(-1, wide[2]), c(0.5, 0.5), col = col[2], lwd = lwd, lty = lty)
   points(wide[2], 0.5, pch = 19, col = col[2], cex = 1.25)
-  legend("topleft", as.expression(bquote(bold(L[50] == .(round(wide[2], 1))))), bty = "n")
-  cat("Morphometric size at sexual maturity =", round(wide[2], 1), "\n")
+  legend("topleft", c(as.expression(bquote(bold(L[50] == .(round(wide[2], 1))))),
+                      as.expression(bquote(bold(R^2 == .(round(R2, 2)))))), 
+         bty = "n")
+  cat("Size at morphometric maturity =", round(wide[2], 1), "\n")
   cat("Confidence intervals =", round(wide[1], 1), "-",round(wide[3], 1) ,  "\n")
   
   return(invisible(NULL))

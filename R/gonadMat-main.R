@@ -1,6 +1,6 @@
 #' Estimate gonadal maturity
 #' 
-#' Estimate gonadal size at sexual maturity.
+#' Estimate size at gonad maturity.
 #' @param data data.frame with allometric variables and stage of sexual maturity (gonad maturation stages).
 #' @param varNames a character string indicating the name of the allometric 
 #' and the stage of sexual maturity variables to be used for analysis.
@@ -17,11 +17,11 @@
 #' 
 #' \code{B_boot} the 'n iter' values of parameter B.
 #' 
-#' \code{L50} the 'n iter' values of parameter L50 (gonadal size at sexual maturity).
+#' \code{L50} the 'n iter' values of parameter L50 (size at gonad maturity).
 #' 
 #' \code{out} a dataframe with the allometric variable "X", stage of sexual maturity, the fitted values for  
 #' logistic regression and confidence intervals (95\%). Also the summary statistics of the model is provided.
-#' @details Estimate the gonadal size at sexual maturity using a logistic regression with X variable and 
+#' @details Estimate the size at gonad maturity using a logistic regression with X variable and 
 #' stages of sexual maturity (two categories: inmature and mature). 
 #' 
 #' The function requires a data.frame with the X (allometric variable) and 
@@ -51,14 +51,14 @@
 #' gonad_mat = gonad_mature(matFish, varNames = c("total_length", "stage_mat"), inmName = "I", 
 #' matName = c("II", "III", "IV"), method = "fq", niter = 50)
 #' 
-#' ## \eqn{niter} parameters:
+#' # 'niter' parameters:
 #' gonad_mat$A_boot
 #' gonad_mat$B_boot
 #' gonad_mat$L50_boot
 #' gonad_mat$out
 #' @export
 gonad_mature <- function(data, varNames = c("allometric", "stage") , inmName = "inm", matName = "mad", 
-                         method = "fq", niter = 999, seed = 70387){
+                         method = "fq", niter = 999, seed = 070388){
   
   if(length(varNames) != 2) stop("You must provide two variables.")
   if(!all(varNames %in% names(data))) stop("'varNames' have not been found in data.")
@@ -71,7 +71,7 @@ gonad_mature <- function(data, varNames = c("allometric", "stage") , inmName = "
   if(!all(c(inmName, matName) %in% levels(data$stage))) stop("'inmName' or 'matName' have not been found in data.")
   if(all(inmName %in% matName)) stop("'inmName' and 'matName' must have different stage names")
   
-  data$stage <- ifelse(data$stage == inmName, 0, 1)
+  data$stage <- ifelse(data$stage %in% inmName, 0, 1)
   estimate <- switch(method,
                      fq = .gonad_mature_fq(data = data, niter = niter, seed = seed),
                      bayes = .gonad_mature_bayes(data = data, niter = niter, seed = seed))
@@ -91,12 +91,12 @@ gonad_mature <- function(data, varNames = c("allometric", "stage") , inmName = "
 }
 
 
-#' Print method for gonadMat class (gonadal size at sexual maturity)
+#' Print method for gonadMat class (size at gonad maturity)
 #'
 #' @param x object of class 'gonadMat' with the parameters of the logistic regression and a data.frame with the X and stage of sexual maturity.
 #' variables. Also the fitted values for the logistic regression and confidence intervals (95\%).
 #' @param \dots Additional arguments to the print method.
-#' @return The median of the gonadal size at sexual maturity estimation and parameters.
+#' @return The median of the size at gonad maturity estimation, parameters and the Nagelkerke's R squared.
 #' @examples
 #' data(matFish)
 #' 
@@ -115,21 +115,28 @@ print.gonadMat <- function(x, ...){
   B_b   <- quantile(x$B_boot, probs = 0.5, na.rm = TRUE)
   L50_b <- quantile(x$L50_boot, probs = 0.5, na.rm = TRUE)
   
-  if(is.null(coef(x$model))){
-    tab <- matrix(as.numeric(c(A_b, B_b, L50_b)), 
-                  nrow = 3, ncol = 1, byrow = TRUE)
+  fit     <- x$out
+  x_input <- fit$x
+  y_input <- fit$mature
+
+  model1 <- glm(y_input ~ x_input, family = binomial(link = "logit"))
+  R2     <- nagelkerkeR2(model1)
+  
+    if(is.null(coef(x$model))){
+    tab <- matrix(c(round(as.numeric(c(A_b, B_b, L50_b)), 4), round(R2, 4)), 
+                  nrow = 4, ncol = 1, byrow = TRUE)
     colnames(tab) <- c("Bootstrap (Median)")
-    rownames(tab) <- c("A", "B", "L50")
+    rownames(tab) <- c("A", "B", "L50", "R2")
     tab <- as.table(tab)
     return(tab)
   }else{
     A_or   <- coef(x$model)[1]
     B_or   <- coef(x$model)[2]
     L50_or <- -A_or/B_or
-    tab <- matrix(as.numeric(c(A_or, A_b, B_or, B_b, L50_or, L50_b)), 
-                  nrow = 3, ncol = 2, byrow = TRUE)
+    tab <- matrix(c(round(as.numeric(c(A_or, A_b, B_or, B_b, L50_or, L50_b)), 4), "-", round(R2, 4)), 
+                  nrow = 4, ncol = 2, byrow = TRUE)
     colnames(tab) <- c("Original", "Bootstrap (Median)")
-    rownames(tab) <- c("A", "B", "L50")
+    rownames(tab) <- c("A", "B", "L50", "R2")
     tab <- as.table(tab)
     return(tab)
   }
@@ -139,13 +146,13 @@ print.gonadMat <- function(x, ...){
 
 
 
-#' Plot method for gonadMat class (gonadal size at sexual maturity)
+#' Plot method for gonadMat class (size at gonad maturity)
 #'
 #' @param x object of class 'gonadMat' with the mature parameters and a data.frame with the X and stage of sexual maturity.
 #' variables. Also the fitted values for the logistic regression and confidence intervals (95\%).
 #' @param xlab a title for the x axis.
 #' @param ylab a title for the y axis.
-#' @param col color for the logistic curve and for the L50\% morphometric size at sexual maturity.
+#' @param col color for the logistic curve and for the L50\% size at gonad maturity.
 #' @param lwd line with for drawing fitted values and confidence intervals.
 #' @param lty line type line type for drawing fitted values and confidence intervals
 #' @param vline_hist color of the vertival lines in the histogram. The lines represent the 
@@ -173,6 +180,10 @@ plot.gonadMat <- function(x, xlab = "X", ylab = "Proportion mature", col = c("bl
   y_input <- fit$mature
   m_p     <- tapply(y_input, x_input, mean)
   wide    <- quantile(x$L50_boot, probs = c(0.025, 0.5, 0.975), na.rm = TRUE)
+  
+  # R-square Nagelkerke method
+  model1 <- glm(y_input ~ x_input, family = binomial(link = "logit"))
+  R2     <- nagelkerkeR2(model1)
   
   # figure 1
   hist(x$A_boot, main = "", xlab = "A", col = "grey90")
@@ -208,8 +219,10 @@ plot.gonadMat <- function(x, xlab = "X", ylab = "Proportion mature", col = c("bl
   lines(c(wide[2], wide[2]), c(-1, 0.5), col = col[2], lwd = lwd, lty = lty)
   lines(c(-1, wide[2]), c(0.5, 0.5), col = col[2], lwd = lwd, lty = lty)
   points(wide[2], 0.5, pch = 19, col = col[2], cex = 1.25)
-  legend("topleft", as.expression(bquote(bold(L[50] == .(round(wide[2], 1))))), bty = "n")
-  cat("Morphometric size at sexual maturity =", round(wide[2], 1), "\n")
+  legend("topleft", c(as.expression(bquote(bold(L[50] == .(round(wide[2], 1))))),
+                      as.expression(bquote(bold(R^2 == .(round(R2, 2)))))), 
+         bty = "n")
+  cat("Size at gonad maturity =", round(wide[2], 1), "\n")
   cat("Confidence intervals =", round(wide[1], 1), "-",round(wide[3], 1) ,  "\n")
   
   return(invisible(NULL))
