@@ -27,10 +27,11 @@ print(classify_data)
 par(mfrow = c(2,2))
 plot(classify_data)
 
-plot(classify_data, xlab = "Carapace width (mm.)", ylab = "Chela heigth (mm)")
+plot(classify_data, xlab = "Carapace width (mm.)", ylab = "Chela heigth (mm)", legendPlot = FALSE)
+legend("topleft", "Put your legend here", bty = "n")
 
 plot(classify_data, xlab = "Carapace width (mm.)", ylab = "Chela heigth (mm)", 
-     col = c(2, 3), pch = c(5, 6))
+     col = c(2, 3), pch = c(5, 6), legendPlot = TRUE)
 
 plot(classify_data, xlab = "Carapace width (mm.)", ylab = "Chela heigth (mm)", 
      col = c(2, 3), pch = c(5, 6), lty_lines = c(1, 2), lwd_lines = c(1, 3), 
@@ -54,6 +55,9 @@ plot(my_ogive_fq, xlab = "Carapace width (mm.)", ylab = "Proportion mature", col
 
 par(mfrow = c(2,2))
 plot(my_ogive_bayes, xlab = "Carapace width (mm.)", ylab = "Proportion mature", col = c("blue", "red"))
+
+## ----echo = TRUE, fig.width = 10, fig.height = 10, warning=FALSE---------
+plot(my_ogive_fq, xlab = "Carapace width (mm.)", ylab = "Proportion mature", col = c("blue", "red"), onlyOgive = TRUE)
 
 ## ----echo=TRUE-----------------------------------------------------------
 data(matFish)
@@ -80,4 +84,8 @@ plot(my_ogive_fq, xlab = "Total length (cm.)", ylab = "Proportion mature", col =
 
 par(mfrow = c(2,2))
 plot(my_ogive_bayes, xlab = "Total length (cm.)", ylab = "Proportion mature", col = c("blue", "red"))
+
+## ----echo = TRUE, fig.width = 10, fig.height = 10, warning=FALSE---------
+par(mfrow = c(2,2))
+plot(my_ogive_fq, xlab = "Total length (cm.)", ylab = "Proportion mature", col = c("blue", "red"), onlyOgive = TRUE)
 

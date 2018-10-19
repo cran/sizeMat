@@ -199,6 +199,8 @@ print.classify <- function(x, ...){
 #' @param lty_lines the line type in the regression.
 #' @param lwd_lines the line width in the regression.
 #' @param cex character expansion in the regression.
+#' @param legendPlot legend in the plot (FALSE or TRUE).
+#' @param cex_label size of the legendPlot
 #' @param \dots Additional arguments to the plot method.
 #' @examples
 #' data(crabdata)
@@ -219,7 +221,8 @@ print.classify <- function(x, ...){
 #' @export
 #' @method plot classify
 plot.classify <- function(x, xlab = "X", ylab = "Y", col = c(1, 2), pch = c(4, 5),
-                          cex = c(1, 1), lty_lines = c(1, 1), lwd_lines = c(1, 1), ...){
+                          cex = c(1, 1), lty_lines = c(1, 1), lwd_lines = c(1, 1), 
+                          legendPlot = TRUE, cex_label = 0.8,  ...){
 
   if (!inherits(x, "classify"))
     stop("Use only with 'classify' objects")
@@ -253,8 +256,12 @@ plot.classify <- function(x, xlab = "X", ylab = "Y", col = c(1, 2), pch = c(4, 5
   lines(adt$x, predict(fit_adt), col = COL[2], lwd = LWD[2], lty = LTY[2])
   eq_juv <- paste0("Y = ", round(as.numeric(coef(fit_juv)[1]), 2), " + ", round(as.numeric(coef(fit_juv)[2]),2), " *X", sep = "")
   eq_adt <- paste0("Y = ", round(as.numeric(coef(fit_adt)[1]), 2), " + ", round(as.numeric(coef(fit_adt)[2]),2), " *X", sep = "")
-  legend("topleft", c(paste("Juveniles: ", eq_juv), paste("Adults: ", eq_adt)),
-         bty = "n", pch = unique(PCH), col = unique(COL), cex = 0.8)
+  
+  if(legendPlot == TRUE){
+    legend("topleft", c(paste("Juveniles: ", eq_juv), paste("Adults: ", eq_adt)),
+           bty = "n", pch = unique(PCH), col = unique(COL), cex = cex_label)
+  }
+  
   return(invisible(NULL))
 }
 
@@ -399,6 +406,7 @@ print.morphMat <- function(x, ...){
 #' the median and the confidece intervals.
 #' @param lwd_hist line with for the vertical line in the histogram.
 #' @param lty_hist line type for the vertical line in the histogram.
+#' @param onlyOgive plot only the ogive.
 #' @param \dots Additional arguments to the plot method.
 #' @examples
 #' data(crabdata)
@@ -412,7 +420,8 @@ print.morphMat <- function(x, ...){
 #' @export
 #' @method plot morphMat
 plot.morphMat <- function(x, xlab = "X", ylab = "Proportion mature", col = c("blue", "red"),
-                          lwd = 2, lty = 2, vline_hist = "black", lwd_hist = 2, lty_hist = 2, ...){
+                          lwd = 2, lty = 2, vline_hist = "black", lwd_hist = 2, lty_hist = 2, 
+                          onlyOgive = FALSE, ...){
 
   if (!inherits(x, "morphMat"))
     stop("Use with 'morphMat' objects only")
@@ -426,46 +435,60 @@ plot.morphMat <- function(x, xlab = "X", ylab = "Proportion mature", col = c("bl
   # R-square Nagelkerke method
   model1 <- glm(y_input ~ x_input, family = binomial(link = "logit"))
   R2     <- nagelkerkeR2(model1)
+  
+  if(onlyOgive == TRUE){
+    if(length(col) < 2) stop('col argument must have 2 values. The colors could be the same')
+    if(length(col) > 2) warning('col: only the first two colors will be used in the plot')
+    plot(sort(unique(x_input)), m_p, xlab = xlab, ylab = ylab, pch = 19, col = "darkgrey", ...)
+    lines(sort(x_input), sort(fit$fitted), col = col[1], lwd = lwd)
+    lines(sort(x_input), sort(fit$CIlower), col = col[1], lwd = lwd, lty = lty)
+    lines(sort(x_input), sort(fit$CIupper), col = col[1], lwd = lwd, lty = lty)
+    lines(c(wide[2], wide[2]), c(-1, 0.5), col = col[2], lwd = lwd, lty = lty)
+    lines(c(-1, wide[2]), c(0.5, 0.5), col = col[2], lwd = lwd, lty = lty)
+    points(wide[2], 0.5, pch = 19, col = col[2], cex = 1.25)
+  }else{
+    # figure 1
+    hist(x$A_boot, main = "", xlab = "A", col = "grey90")
+    abline(v = as.numeric(quantile(x$A_boot, probs = c(0.5), na.rm = TRUE)),
+           lwd = lwd_hist, col = vline_hist)
+    abline(v = c(as.numeric(quantile(x$A_boot, probs = c(0.025, 0.975), na.rm = TRUE))),
+           lty = lty_hist, col = vline_hist)
+    box()
+    
+    # figure 2
+    hist(x$B_boot, main = "", xlab = "B", col = "grey90")
+    abline(v = as.numeric(quantile(x$B_boot, probs = c(0.5), na.rm = TRUE)),
+           lwd = lwd_hist, col = vline_hist)
+    abline(v = c(as.numeric(quantile(x$B_boot, probs = c(0.025, 0.975), na.rm = TRUE))),
+           lty = lty_hist, col = vline_hist)
+    box()
+    
+    # figure 3
+    hist(x$L50_boot, main = "", xlab = "Size at sexual maturity values", col = "grey90")
+    abline(v = as.numeric(quantile(x$L50_boot, probs = c(0.5), na.rm = TRUE)),
+           lwd = lwd_hist, col = vline_hist)
+    abline(v = c(as.numeric(quantile(x$L50_boot, probs = c(0.025, 0.975), na.rm = TRUE))),
+           lty = lty_hist, col = vline_hist)
+    box()
+    
+    # figure 4
+    if(length(col) < 2) stop('col argument must have 2 values. The colors could be the same')
+    if(length(col) > 2) warning('col: only the first two colors will be used in the plot')
+    plot(sort(unique(x_input)), m_p, xlab = xlab, ylab = ylab, pch = 19, col = "darkgrey", ...)
+    lines(sort(x_input), sort(fit$fitted), col = col[1], lwd = lwd)
+    lines(sort(x_input), sort(fit$CIlower), col = col[1], lwd = lwd, lty = lty)
+    lines(sort(x_input), sort(fit$CIupper), col = col[1], lwd = lwd, lty = lty)
+    lines(c(wide[2], wide[2]), c(-1, 0.5), col = col[2], lwd = lwd, lty = lty)
+    lines(c(-1, wide[2]), c(0.5, 0.5), col = col[2], lwd = lwd, lty = lty)
+    points(wide[2], 0.5, pch = 19, col = col[2], cex = 1.25)
+    legend("topleft", c(as.expression(bquote(bold(L[50] == .(round(wide[2], 1))))),
+                        as.expression(bquote(bold(R^2 == .(round(R2, 2)))))),
+           bty = "n")
+  }
 
-  # figure 1
-  hist(x$A_boot, main = "", xlab = "A", col = "grey90")
-  abline(v = as.numeric(quantile(x$A_boot, probs = c(0.5), na.rm = TRUE)),
-         lwd = lwd_hist, col = vline_hist)
-  abline(v = c(as.numeric(quantile(x$A_boot, probs = c(0.025, 0.975), na.rm = TRUE))),
-         lty = lty_hist, col = vline_hist)
-  box()
-
-  # figure 2
-  hist(x$B_boot, main = "", xlab = "B", col = "grey90")
-  abline(v = as.numeric(quantile(x$B_boot, probs = c(0.5), na.rm = TRUE)),
-         lwd = lwd_hist, col = vline_hist)
-  abline(v = c(as.numeric(quantile(x$B_boot, probs = c(0.025, 0.975), na.rm = TRUE))),
-         lty = lty_hist, col = vline_hist)
-  box()
-
-  # figure 3
-  hist(x$L50_boot, main = "", xlab = "Size at sexual maturity values", col = "grey90")
-  abline(v = as.numeric(quantile(x$L50_boot, probs = c(0.5), na.rm = TRUE)),
-         lwd = lwd_hist, col = vline_hist)
-  abline(v = c(as.numeric(quantile(x$L50_boot, probs = c(0.025, 0.975), na.rm = TRUE))),
-         lty = lty_hist, col = vline_hist)
-  box()
-
-  # figure 4
-  if(length(col) < 2) stop('col argument must have 2 values. The colors could be the same')
-  if(length(col) > 2) warning('col: only the first two colors will be used in the plot')
-  plot(sort(unique(x_input)), m_p, xlab = xlab, ylab = ylab, pch = 19, col = "darkgrey", ...)
-  lines(sort(x_input), sort(fit$fitted), col = col[1], lwd = lwd)
-  lines(sort(x_input), sort(fit$CIlower), col = col[1], lwd = lwd, lty = lty)
-  lines(sort(x_input), sort(fit$CIupper), col = col[1], lwd = lwd, lty = lty)
-  lines(c(wide[2], wide[2]), c(-1, 0.5), col = col[2], lwd = lwd, lty = lty)
-  lines(c(-1, wide[2]), c(0.5, 0.5), col = col[2], lwd = lwd, lty = lty)
-  points(wide[2], 0.5, pch = 19, col = col[2], cex = 1.25)
-  legend("topleft", c(as.expression(bquote(bold(L[50] == .(round(wide[2], 1))))),
-                      as.expression(bquote(bold(R^2 == .(round(R2, 2)))))),
-         bty = "n")
   cat("Size at morphometric maturity =", round(wide[2], 1), "\n")
   cat("Confidence intervals =", round(wide[1], 1), "-",round(wide[3], 1) ,  "\n")
+  cat("Rsquare =", round(R2, 2))
 
   return(invisible(NULL))
 }
