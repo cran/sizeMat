@@ -86,6 +86,5 @@ par(mfrow = c(2,2))
 plot(my_ogive_bayes, xlab = "Total length (cm.)", ylab = "Proportion mature", col = c("blue", "red"))
 
 ## ----echo = TRUE, fig.width = 10, fig.height = 10, warning=FALSE---------
-par(mfrow = c(2,2))
 plot(my_ogive_fq, xlab = "Total length (cm.)", ylab = "Proportion mature", col = c("blue", "red"), onlyOgive = TRUE)
 

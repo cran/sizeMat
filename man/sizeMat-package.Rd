@@ -4,9 +4,9 @@
 \name{sizeMat-package}
 \alias{sizeMat-package}
 \alias{sizeMat}
-\title{Size at Sexual Maturity.}
+\title{Estimate Size at Sexual Maturity.}
 \description{
-Contains functions to estimate size at morphometric and gonad maturity for organisms, usually fish and invertebrates. It includes methods for classification based on relative growth (principal components analysis, hierarchical clustering, discriminant analysis), logistic regression (frequentist or Bayes), parameters estimation and some basic plots. The size at sexual maturity is defined as the length at which a randomly chosen specimen has a 50\% chance of being mature
+Estimate morphometric and gonadal size at sexual maturity for organisms, usually fish and invertebrates. It includes methods for classification based on relative growth (principal components analysis, hierarchical clustering, discriminant analysis), logistic regression (frequentist or Bayes), parameters estimation and some basic plots. The size at sexual maturity is defined as the length at which a randomly chosen specimen has a 50\% chance of being mature
 }
 \details{
 Package: sizeMat
@@ -25,7 +25,7 @@ allometric variables.
 
 1.2) After classification, the logistic approach is used. The size at 50\% maturity (\eqn{L_50}) is estimated as the length at
 which a randomly chosen specimen has a 50\% chance of being mature (Somerton  1980, Roa  et al. 1999, Corgos & Freire 2006).
-In the regression analysis, \eqn{X} (e.g: carapace width) is considered the explanatory variable and the classification \eqn{CS}
+In the regression analysis, \eqn{X} (i.e: carapace width) is considered the explanatory variable and the classification \eqn{CS}
 (juveniles: 0, adults: 1) is considered the response variable (binomial).
 
 The variables are fitted to a logistic function with the form:
@@ -46,13 +46,13 @@ Some basic plotting (classification, \eqn{beta_0}, \eqn{beta_1} and \eqn{L_{50}}
 are also provided.
 
 
-2) The estimation of Size at Gonad Maturity use the logistic approach only.
+2) The estimation of Size at Gonad Maturity use the logistic approach.
 
 To estimate size at gonadal maturity, the database must contains the stage of sexual
-maturity and at least one allometric variable (e.g: total length, fork length, carapace width).
-The stage of sexual maturity is refered to the gonadal maturarion stages (e.g: I, II, III, IV or 0, 1, etc).
+maturity and at least one allometric variable (i.e: total length, fork length, carapace width).
+The stage of sexual maturity is refered to the gonadal maturarion stages (i.e: I, II, III, IV or 0, 1, etc).
 
-So, in the regression analysis, the allometric variable (e.g: total length) is considered the
+So, in the regression analysis, the allometric variable (i.e: total length) is considered the
 explanatory variable and the stage of sexual maturity (inmature: 0, mature: 1)
 is considered the response variable (binomial). The regression  analysis is performed
 in the same way as the size at morphometric maturity.
@@ -61,19 +61,18 @@ in the same way as the size at morphometric maturity.
 #See examples for functions morph_mature() and gonad_mature().
 }
 \references{
-Agostinho, C. S. (2000). Use of otoliths to estimate size at sexual maturity in fish. Brazilian Archives of Biology and Technology, 43(4).
+Agostinho, C. S. (2000). Use of otoliths to estimate size at sexual maturity in fish. Brazilian Archives of Biology and Technology, 43(4):437-440, doi: 10.1590/s1516-89132000000400014
 
-Corgos, A. & Freire, J. (2006). Morphometric and gonad maturity in the spider crab Maja brachydactyla: a comparison of methods for estimating size at maturity in species with determinate growth. ICES Journal of Marine Science: Journal du Conseil, 63(5), 851-859.
+Corgos, A. & Freire, J. (2006). Morphometric and gonad maturity in the spider crab Maja brachydactyla: a comparison of methods for estimating size at maturity in species with determinate growth. ICES Journal of Marine Science, 63(5): 851-859, doi: 10.1016/j.icesjms.2006.03.003
 
-Roa, R., Ernst, B. & Tapia, F. (1999). Estimation of size at sexual maturity: an evaluation of analytical and resampling procedures. Fishery Bulletin, 97(3), 570-580.
+Roa, R., Ernst, B. & Tapia, F. (1999). Estimation of size at sexual maturity: an evaluation of analytical and resampling procedures. Fishery Bulletin, 97(3): 570-580.
 
-Somerton, D. A. (1980). A computer technique for estimating the size of sexual maturity in crabs. Canadian Journal of Fisheries and Aquatic Sciences, 37(10), 1488-1494.
+Somerton, D. A. (1980). A computer technique for estimating the size of sexual maturity in crabs. Canadian Journal of Fisheries and Aquatic Sciences, 37(10): 1488-1494. doi: 10.1139/f80-192
 }
 \author{
 Josymar Torrejon-Magallanes <ejosymart@gmail.com>
 }
-\keyword{alometric,}
-\keyword{morphometric,}
-\keyword{relative-growth.}
-\keyword{sexual-maturity,}
-\keyword{size,}
+\concept{alometric}
+\concept{maturity}
+\concept{morphometric}
+\concept{relative growth}
