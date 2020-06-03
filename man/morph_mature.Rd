@@ -7,7 +7,7 @@
 morph_mature(data, method = "fq", niter = 999, seed = 70388)
 }
 \arguments{
-\item{data}{an object of class 'classify' with the allometric variables (X", "Y") and classification of maturity (juveniles = 0, adults = 1).}
+\item{data}{an object of class 'classify' with the allometric variables ("X", "Y") and classification of maturity (juveniles = 0, adults = 1).}
 
 \item{method}{a character string indicating the method to be applied, \code{"fq"} frequentist GLM, or \code{"bayes"} Bayes GLM (MCMClogit function).}
 
@@ -30,7 +30,7 @@ An object of class 'morphMat'.
 logistic regression and confidence intervals (95\%). Also the summary statistics of the model is provided.
 }
 \description{
-Estimate size at morphometric maturity (\eqn{L50}).
+Estimate size at morphometric maturity.
 }
 \details{
 Estimate the size at morphometric maturity using a logistic regression with X variable

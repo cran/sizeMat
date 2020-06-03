@@ -28,13 +28,13 @@
 #' the stage of sexual maturity (gonad maturation stage).
 #' 
 #' The argument \code{varNames} requires a character string indicating the name of one allometric and the stage
-#' of sexual maturity variable to be used for analysis (i.e \code{varNames = c("total_length", "stage_mat")}). 
+#' of sexual maturity variable to be used for analysis (i.e. \code{varNames = c("total_length", "stage_mat")}). 
 #' So the argument \code{varNames} must contain two character strings only, the first is the allometric variable 
 #' and the second is the stage of sexual maturity.
 #' 
 #' The arguments \code{inmName} and \code{matName} require a character string indicating the name 
 #' of the stages of sexual maturity in the data.frame. The argument could contain one character string 
-#' or could be a vector (i.e \code{inmName = "I"}, \code{matName = c("II", "III", "IV")}).
+#' or should be a vector (i.e. \code{inmName = "I"}, \code{matName = c("II", "III", "IV")}).
 #' 
 #' The argument \code{method} requires a character string indicating which regression will be used for the test.
 #' If \code{method = "fq"} the logistic regression is based on GLM (frequentist), if \code{method = "bayes"} a sample from 
@@ -44,7 +44,6 @@
 #' in generate B bootstrap samples, by resampling with replacement the original data. Then all statistics for each parameter 
 #' can be calculated from each bootstrap sample (median and confidence intervals). 
 #' For the \code{method = "bayes"}, the argument \code{niter} is related to the number of Metropolis iterations for the sampler.
-#' @exportClass gonad_mature
 #' @examples
 #' data(matFish)
 #' 
@@ -66,7 +65,7 @@ gonad_mature <- function(data, varNames = c("allometric", "stage") , inmName = "
   data <- data[, varNames]
   names(data) <- c("x", "stage")
   data$stage <- as.factor(data$stage)
-  data <- data[complete.cases(data), ] 
+  data <- data[complete.cases(data), ]
   
   if(!all(c(inmName, matName) %in% levels(data$stage))) stop("'inmName' or 'matName' have not been found in data.")
   if(all(inmName %in% matName)) stop("'inmName' and 'matName' must have different stage names")

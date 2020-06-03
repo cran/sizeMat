@@ -4,6 +4,10 @@ library(sizeMat)
 ## ---- eval=FALSE--------------------------------------------------------------
 #  install.packages("sizeMat")
 
+## ---- eval=FALSE--------------------------------------------------------------
+#  # install.packages("devtools")
+#  devtools::install_github("ejosymart/sizeMat")
+
 ## ----echo=TRUE----------------------------------------------------------------
 data(crabdata)
 

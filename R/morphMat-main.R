@@ -4,13 +4,13 @@
 #' @importFrom matrixStats rowQuantiles
 #' @importFrom MASS lda qda
 #' @importFrom grDevices colors
-#' @importFrom graphics axis box legend lines plot points hist par abline
+#' @importFrom graphics axis box legend lines points hist par abline
 #' @importFrom utils data read.csv installed.packages
 #' @import stats
 #'
 #' @title Estimate Size at Sexual Maturity.
 #'
-#' @description Estimate morphometric and gonadal size at sexual maturity for organisms, usually fish and invertebrates. It includes methods for classification based on relative growth (principal components analysis, hierarchical clustering, discriminant analysis), logistic regression (frequentist or Bayes), parameters estimation and some basic plots. The size at sexual maturity is defined as the length at which a randomly chosen specimen has a 50\% chance of being mature
+#' @description Estimate morphometric and gonadal size at sexual maturity for organisms, usually fish and invertebrates. It includes methods for classification based on relative growth (principal components analysis, hierarchical clustering, discriminant analysis), logistic regression (frequentist or Bayes), parameters estimation and some basic plots. The size at sexual maturity is defined as the length at which a randomly chosen specimen has a 50\% chance of being mature.
 #' @name sizeMat-package
 #' @aliases sizeMat-package sizeMat
 #' @docType package
@@ -23,48 +23,48 @@
 #' 1.1) A Principal Components Analysis is conducted with two allometric variables (x: independent variable, y: dependent variable) in log base, allowing to distinguish
 #' two groups that would represent juveniles and adult. The individuals are assigned to each group using a hierarchical classification procedure (hierarchical cluster).
 #' This method is based on establishing a predetermined number of groups (in this case, two) and assigning individuals to one of the groups according to
-#' their loads on the two axes of the PCA (Corgos & Freire, 2006). Using the results of the classification (PCA + cluster), a discriminant analysis (linear or quadratic)
+#' their loads on the two axes of the PCA (Corgos and Freire, 2006). Using the results of the classification (PCA + cluster), a discriminant analysis (linear or quadratic)
 #' is carried out to obtain a discriminating function that permitted any individuals to be classified as a juvenile or an adult on the basis of the X and Y
 #' allometric variables.
 #'
-#' 1.2) After classification, the logistic approach is used. The size at 50\% maturity (\eqn{L_50}) is estimated as the length at
+#' 1.2) After classification, the logistic approach is used. The size at 50\% maturity (\eqn{L_{50}}) is estimated as the length at
 #' which a randomly chosen specimen has a 50\% chance of being mature (Somerton  1980, Roa  et al. 1999, Corgos & Freire 2006).
-#' In the regression analysis, \eqn{X} (i.e: carapace width) is considered the explanatory variable and the classification \eqn{CS}
+#' In the regression analysis, \eqn{X} (i.e. carapace width) is considered the explanatory variable and the classification \eqn{CL}
 #' (juveniles: 0, adults: 1) is considered the response variable (binomial).
 #'
 #' The variables are fitted to a logistic function with the form:
 #'
-#' \deqn{P_{CS} = 1 / [1+e^{-(beta_0 + beta_1*X)}]}
+#' \deqn{P_{CL} = \frac{1}{(1 + e^{-(beta_{0} + beta_{1}*X)})}}
 #'
 #' where:
 #'
 #' \eqn{P_{CL}} is the probability of an individual of being mature at a determinate \eqn{X} length.
 #'
-#' \eqn{beta_0} (intercept) and \eqn{beta_1} (slope) are parameters estimated.
+#' \eqn{beta_{0}} (intercept) and \eqn{beta_{1}} (slope) are parameters estimated.
 #'
-#' The (\eqn{L_{50}}) is calculated as:
+#' The \eqn{L_{50}} is calculated as:
 #'
-#' \deqn{L_{50} = -beta_0 / beta_1}
+#' \deqn{L_{50} = \frac{-beta_{0}}{beta_{1}}}
 #'
-#' Some basic plotting (classification, \eqn{beta_0}, \eqn{beta_1} and \eqn{L_{50}} histogram, and maturity ogive)
+#' Some basic plotting (classification, \eqn{beta_{0}}, \eqn{beta_{1}} and \eqn{L_{50}} histogram, and maturity ogive)
 #' are also provided.
 #'
 #'
 #' 2) The estimation of Size at Gonad Maturity use the logistic approach.
 #'
 #' To estimate size at gonadal maturity, the database must contains the stage of sexual
-#' maturity and at least one allometric variable (i.e: total length, fork length, carapace width).
-#' The stage of sexual maturity is referred to the gonadal maturation stages (i.e: I, II, III, IV or 0, 1, etc).
+#' maturity and at least one allometric variable (i.e. total length, fork length, carapace width).
+#' The stage of sexual maturity is referred to the gonadal maturation stages (i.e. I, II, III, IV or 0, 1, etc).
 #'
-#' So, in the regression analysis, the allometric variable (i.e: total length) is considered the
+#' So, in the regression analysis, the allometric variable (i.e. total length) is considered the
 #' explanatory variable and the stage of sexual maturity (immature: 0, mature: 1)
 #' is considered the response variable (binomial). The regression  analysis is performed
 #' in the same way as the size at morphometric maturity.
 #'
-#' @references Agostinho, C. S. (2000). Use of otoliths to estimate size at sexual maturity in fish. Brazilian Archives of Biology and Technology, 43(4):437-440, doi: 10.1590/s1516-89132000000400014
-#' @references Corgos, A. & Freire, J. (2006). Morphometric and gonad maturity in the spider crab Maja brachydactyla: a comparison of methods for estimating size at maturity in species with determinate growth. ICES Journal of Marine Science, 63(5): 851-859, doi: 10.1016/j.icesjms.2006.03.003
-#' @references Roa, R., Ernst, B. & Tapia, F. (1999). Estimation of size at sexual maturity: an evaluation of analytical and resampling procedures. Fishery Bulletin, 97(3): 570-580.
-#' @references Somerton, D. A. (1980). A computer technique for estimating the size of sexual maturity in crabs. Canadian Journal of Fisheries and Aquatic Sciences, 37(10): 1488-1494. doi: 10.1139/f80-192
+#' @references Agostinho, C. S. (2000). Use of otoliths to estimate size at sexual maturity in fish. Brazilian Archives of Biology and Technology, 43(4):437-440, doi:10.1590/s1516-89132000000400014.
+#' @references Corgos, A. and Freire, J. (2006). Morphometric and gonad maturity in the spider crab Maja brachydactyla: a comparison of methods for estimating size at maturity in species with determinate growth. ICES Journal of Marine Science, 63(5): 851-859, doi:10.1016/j.icesjms.2006.03.003.
+#' @references Roa, R., Ernst, B. and Tapia, F. (1999). Estimation of size at sexual maturity: an evaluation of analytical and resampling procedures. Fishery Bulletin, 97(3): 570-580.
+#' @references Somerton, D. A. (1980). A computer technique for estimating the size of sexual maturity in crabs. Canadian Journal of Fisheries and Aquatic Sciences, 37(10): 1488-1494. doi:10.1139/f80-192.
 #' @concept morphometric 
 #' @concept maturity
 #' @concept allometric
@@ -93,12 +93,11 @@ NULL
 #' The individuals are assigned to each group using a hierarchical classification procedure
 #' (hierarchical cluster with agglomeration method: "Ward.D" and the distance measure: "euclidean").
 #' This method is based on establishing a predetermined number of groups (in this case, two) and assigning individuals
-#' to one of the groups according to their loads on the two axes of the PCA (Corgos & Freire, 2006).
+#' to one of the groups according to their loads on the two axes of the PCA (Corgos and Freire, 2006).
 #'
 #' Using the results of the classification (PCA + cluster), a discriminant analysis (linear or quadratic) is conducted
 #' to obtain a discriminating function that permitted any individuals to be classified as a
 #' juvenile or an adult on the basis of the X and Y allometric variables.
-#' @exportClass classify
 #' @examples
 #' data(crabdata)
 #'
@@ -118,10 +117,11 @@ classify_mature <- function(data, varNames = c("x", "y"), varSex = "sex",
   input <- data[, c(varNames, varSex)]
   names(input)  <-  c("x", "y", "sex")
   input <- input[complete.cases(input), ]
+  input <- input[order(input$x), ]
 
   if(is.null(selectSex)) {
-     input <- input[, c("x", "y")]
-     cat("all individuals were used in the analysis", "\n\n")
+    input <- input[, c("x", "y")]
+    cat("all individuals were used in the analysis", "\n\n")
   } else {
     input <-input[which(input$sex == selectSex),]
     cat("only", paste0(unique(input$sex), "-sex", sep =""), "were used in the analysis", "\n\n")
@@ -248,11 +248,11 @@ plot.classify <- function(x, xlab = "X", ylab = "Y", col = c(1, 2), pch = c(4, 5
   if(length(lwd_lines) < 2) stop('lwd argument must have 2 values. The line width could be the same')
   if(length(lwd_lines) > 2) warning('lwd: only the first two line width will be used in the plot')
 
-  PCH <- ifelse (data$mature == 0, pch[1], pch[2])
-  COL <- ifelse (data$mature == 0, col[1], col[2])
-  CEX <- ifelse (data$mature == 0, cex[1], cex[2])
-  LTY <- ifelse (data$mature == 0, lty_lines[1], lty_lines[2])
-  LWD <- ifelse (data$mature == 0, lwd_lines[1], lwd_lines[2])
+  PCH <- ifelse(data$mature == 0, pch[1], pch[2])
+  COL <- ifelse(data$mature == 0, col[1], col[2])
+  CEX <- ifelse(data$mature == 0, cex[1], cex[2])
+  LTY <- ifelse(data$mature == 0, lty_lines[1], lty_lines[2])
+  LWD <- ifelse(data$mature == 0, lwd_lines[1], lwd_lines[2])
 
   plot(data$x, data$y, type = "p", col = COL, xlab = xlab, ylab = ylab, pch = PCH, cex = CEX, ...)
   lines(juv$x, predict(fit_juv), col = COL[1], lwd = LWD[1], lty = LTY[1])
@@ -271,9 +271,9 @@ plot.classify <- function(x, xlab = "X", ylab = "Y", col = c(1, 2), pch = c(4, 5
 
 #' Estimate morphometric mature
 #'
-#' Estimate size at morphometric maturity (\eqn{L50}).
+#' Estimate size at morphometric maturity.
 #'
-#' @param data an object of class 'classify' with the allometric variables (X", "Y") and classification of maturity (juveniles = 0, adults = 1).
+#' @param data an object of class 'classify' with the allometric variables ("X", "Y") and classification of maturity (juveniles = 0, adults = 1).
 #' @param method a character string indicating the method to be applied, \code{"fq"} frequentist GLM, or \code{"bayes"} Bayes GLM (MCMClogit function).
 #' @param niter number of iterations (bootstrap resampling).
 #' @param seed a single value, interpreted as an integer.
@@ -302,7 +302,6 @@ plot.classify <- function(x, xlab = "X", ylab = "Y", col = c(1, 2), pch = c(4, 5
 #' in generate B bootstrap samples, by resampling with replacement the original data. Then all statistics for each parameter
 #' can be calculated from each bootstrap sample (median and confidence intervals).
 #' For the \code{method = "bayes"}, the argument `niter` is related to the number of Metropolis iterations for the sampler.
-#' @exportClass morphMat
 #' @examples
 #' data(crabdata)
 #'
